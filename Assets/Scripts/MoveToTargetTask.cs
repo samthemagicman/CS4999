@@ -1,7 +1,7 @@
+using MixedReality.Toolkit.SpatialManipulation;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Microsoft.MixedReality.Toolkit.UI;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -83,11 +83,11 @@ public class MoveToTargetTask : MonoBehaviour
         objectManipulator = GetComponent<ObjectManipulator>();
         if (objectManipulator)
         {
-            objectManipulator.OnManipulationStarted.AddListener(arg0 =>
+            objectManipulator.firstSelectEntered.AddListener(arg0 =>
             {
                 CreateDragPreview();
             });
-            objectManipulator.OnManipulationEnded.AddListener(arg0 =>
+            objectManipulator.lastSelectExited.AddListener(arg0 =>
             {
                 DestroyDragPreview();
             });
