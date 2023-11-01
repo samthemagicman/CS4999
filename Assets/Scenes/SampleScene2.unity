@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571328, b: 0.3069217, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -393,6 +393,7 @@ MonoBehaviour:
   useRotation: 0
   useScale: 0
   targetMaterial: {fileID: 2100000, guid: 32a76832b79e84347ad9df08b12709c3, type: 2}
+  targetSuccessMaterial: {fileID: 2100000, guid: 3584049255534794ab929c44f9dcad05, type: 2}
   targetTransform: {x: -1, y: 2, z: 2}
   targetRotation: {x: 0, y: 0, z: 0, w: 1}
   targetScale: {x: 0, y: 0, z: 0}
@@ -765,6 +766,10 @@ PrefabInstance:
       propertyPath: m_InteractionManager
       value: 
       objectReference: {fileID: 2127680137}
+    - target: {fileID: 1720522627331828066, guid: 240af753e47d7a8429419b524c6fb762, type: 3}
+      propertyPath: targetSuccessMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 3584049255534794ab929c44f9dcad05, type: 2}
     - target: {fileID: 7590440352373062245, guid: 240af753e47d7a8429419b524c6fb762, type: 3}
       propertyPath: m_Name
       value: Mug

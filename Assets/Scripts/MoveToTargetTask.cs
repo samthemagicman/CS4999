@@ -20,6 +20,7 @@ public class MoveToTargetTask : MonoBehaviour
     /// The material to use for the target visual
     /// </summary>
     public Material targetMaterial;
+    public Material targetSuccessMaterial;
     public Vector3 targetTransform;
     public Quaternion targetRotation;
     public Vector3 targetScale;
@@ -90,6 +91,9 @@ public class MoveToTargetTask : MonoBehaviour
             objectManipulator.lastSelectExited.AddListener(arg0 =>
             {
                 DestroyDragPreview();
+                if (CheckCompletion()) {
+                    OnCompleted.Invoke();
+                }
             });
         }
     }
@@ -130,10 +134,19 @@ public class MoveToTargetTask : MonoBehaviour
 
         if (targetMaterial)
         {
-            targetGameObject.GetComponent<MeshRenderer>().material = targetMaterial;
+            setTargetGameObjectMaterial(targetMaterial);
         }
 
         arrowObject = Instantiate(arrowObjectPrefab);
+    }
+
+    void setTargetGameObjectMaterial(Material material) {
+        if (targetGameObject != null && material != null) {
+            MeshRenderer meshRenderer = targetGameObject.GetComponent<MeshRenderer>();
+            if (meshRenderer.material != material) {
+                meshRenderer.material = material; 
+            }
+        }
     }
 
     void DestroyDragPreview()
@@ -173,8 +186,6 @@ public class MoveToTargetTask : MonoBehaviour
                 return false;
             }
         }
-
-        OnCompleted.Invoke();
         return true;
     }
 
@@ -197,7 +208,11 @@ public class MoveToTargetTask : MonoBehaviour
 
     void Update()
     {
-        CheckCompletion();
+        if (CheckCompletion()) {
+            setTargetGameObjectMaterial(targetSuccessMaterial);
+        } else {
+            setTargetGameObjectMaterial(targetMaterial);
+}       ;
         AnimateArrow();
     }
 }
