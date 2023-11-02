@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class ObjectGenerator : MonoBehaviour
 {
     public List<MoveToTargetTask> objectsToGenerate; // List of GameObjects to generate
-
+    public bool useRotation = false;
     [SerializeField]
     private Vector3 _spawnAreaPosition;
     public Vector3 SpawnAreaPosition
@@ -63,11 +63,25 @@ public class ObjectGenerator : MonoBehaviour
             );
             randomTargetPosition += SpawnAreaPosition;
 
+            Quaternion randomRotation = Quaternion.Euler(
+                Random.Range(0, 360),
+                Random.Range(0, 360),
+                Random.Range(0, 360)
+            );
+
 
             // Instantiate a random object from the list at the calculated position
             GameObject newObject = Instantiate(objectsToGenerate[Random.Range(0, objectsToGenerate.Count)].gameObject, transform.position + randomPosition, Quaternion.identity);
             MoveToTargetTask targetTask = newObject.GetComponent<MoveToTargetTask>();
             targetTask.targetTransform = randomTargetPosition;
+            if (useRotation)
+            {
+                targetTask.useRotation = true;
+                targetTask.targetRotation = randomRotation;
+            } else
+            {
+                targetTask.useRotation = false;
+            }
 
             // Wait for the object to complete its task (modify this condition according to your needs)
             yield return new WaitUntil(() => newObject.GetComponent<MoveToTargetTask>().TaskIsComplete);
