@@ -11,6 +11,15 @@ using UnityEngine.Events;
 public class MoveToTargetTask : MonoBehaviour
 {
     public UnityEvent OnCompleted = new UnityEvent();
+    [HideInInspector]
+    public bool TaskIsComplete = false;
+
+    [HideInInspector] public bool beingDragged = false;
+
+    [Tooltip("Will reset the object to the original position if the user fails")]
+    public bool resetPositionOnDragFailed = false;
+
+    private Vector3 originalPosition;
 
     public bool useTransform = true;
     public bool useRotation = false;
@@ -81,18 +90,27 @@ public class MoveToTargetTask : MonoBehaviour
 
     void Start()
     {
+        originalPosition = transform.position;
         objectManipulator = GetComponent<ObjectManipulator>();
         if (objectManipulator)
         {
             objectManipulator.firstSelectEntered.AddListener(arg0 =>
             {
                 CreateDragPreview();
+                beingDragged = true;
             });
             objectManipulator.lastSelectExited.AddListener(arg0 =>
             {
+                beingDragged = false;
                 DestroyDragPreview();
                 if (CheckCompletion()) {
                     OnCompleted.Invoke();
+                    TaskIsComplete = true;
+                }
+                else // failed
+                {
+                    if (resetPositionOnDragFailed) transform.position = originalPosition;
+                    TaskIsComplete = false;
                 }
             });
         }
@@ -128,7 +146,7 @@ public class MoveToTargetTask : MonoBehaviour
             Debug.LogException(new Exception("Couldn't create preview object"));
         }
 
-        targetGameObject.transform.localScale = transform.localScale;
+        targetGameObject.transform.localScale = targetScale;
         targetGameObject.transform.position = targetTransform;
         targetGameObject.transform.rotation = targetRotation;
 
@@ -208,11 +226,23 @@ public class MoveToTargetTask : MonoBehaviour
 
     void Update()
     {
+        if (beingDragged)
+        {
+            if (!useRotation)
+            {
+                targetGameObject.transform.rotation = transform.rotation;
+            }
+            if (!useScale)
+            {
+                targetGameObject.transform.localScale = transform.localScale;
+            }
+        }
+
         if (CheckCompletion()) {
             setTargetGameObjectMaterial(targetSuccessMaterial);
         } else {
             setTargetGameObjectMaterial(targetMaterial);
-}       ;
+        };
         AnimateArrow();
     }
 }
