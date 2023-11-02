@@ -2,8 +2,10 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+[RequireComponent(typeof(AudioSource))]
 public class ObjectGenerator : MonoBehaviour
 {
+    private AudioSource audioSource;
     public List<MoveToTargetTask> objectsToGenerate; // List of GameObjects to generate
     public bool useRotation = false;
     [SerializeField]
@@ -34,6 +36,7 @@ public class ObjectGenerator : MonoBehaviour
 
     private void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         StartCoroutine(GenerateObjects());
     }
 
@@ -85,6 +88,7 @@ public class ObjectGenerator : MonoBehaviour
 
             // Wait for the object to complete its task (modify this condition according to your needs)
             yield return new WaitUntil(() => newObject.GetComponent<MoveToTargetTask>().TaskIsComplete);
+            audioSource.Play();
 
             Destroy(newObject); // Destroy the object after it's complete, you can modify this behavior as needed
         }
