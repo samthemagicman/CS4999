@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 1720522627331828065}
   - component: {fileID: 1720522627331828064}
   - component: {fileID: 1720522627331828063}
+  - component: {fileID: 4922188607688078331}
   m_Layer: 0
   m_Name: Mug
   m_TagString: Untagged
@@ -114,7 +115,7 @@ MonoBehaviour:
   targetRotation: {x: 0, y: 0, z: 0, w: 1}
   targetScale: {x: 0, y: 0, z: 0}
   rotationTargetTolerance: 3
-  transformTargetTolerance: 0.01
+  transformTargetTolerance: 0.015
   scaleTargetTolerance: 0
   arrowObjectPrefab: {fileID: 1133875537543874503, guid: 3cc4c9be5bb252b44a79eaf7d918a482, type: 3}
 --- !u!65 &1720522627331828065
@@ -316,8 +317,8 @@ MonoBehaviour:
   disabledInteractorTypes:
   - reference: MixedReality.Toolkit.IPokeInteractor, MixedReality.Toolkit.Core
   <ToggleMode>k__BackingField: 0
-  <SelectThreshold>k__BackingField: 0.9
-  <DeselectThreshold>k__BackingField: 0.1
+  <SelectThreshold>k__BackingField: 0.98
+  <DeselectThreshold>k__BackingField: 0.03
   <TriggerOnRelease>k__BackingField: 1
   <UseGazeDwell>k__BackingField: 0
   <GazeDwellTime>k__BackingField: 1
@@ -364,7 +365,7 @@ MonoBehaviour:
   rotateLerpTime: 0.001
   scaleLerpTime: 0.001
   enableConstraints: 1
-  constraintsManager: {fileID: 0}
+  constraintsManager: {fileID: 1720522627331828064}
   manipulationLogicTypes:
     moveLogicType:
       reference: MixedReality.Toolkit.SpatialManipulation.MoveLogic, MixedReality.Toolkit.SpatialManipulation
@@ -372,3 +373,19 @@ MonoBehaviour:
       reference: MixedReality.Toolkit.SpatialManipulation.RotateLogic, MixedReality.Toolkit.SpatialManipulation
     scaleLogicType:
       reference: MixedReality.Toolkit.SpatialManipulation.ScaleLogic, MixedReality.Toolkit.SpatialManipulation
+--- !u!54 &4922188607688078331
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7590440352373062245}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
