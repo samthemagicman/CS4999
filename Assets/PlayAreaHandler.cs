@@ -25,6 +25,11 @@ public class PlayAreaHandler : MonoBehaviour
 
     [SerializeField]
     private List<PlayAreaConfiguration> playAreaConfigurations = new List<PlayAreaConfiguration>();
+
+    public PressableButton useRotation;
+    public PressableButton useScale;
+    public Slider accuracySlider;
+
     public ObjectGenerator objectGenerator;
     private Dictionary<PlayAreaType, Vector3> playAreaDictionary;
     public GameObject playArea;
@@ -56,10 +61,6 @@ public class PlayAreaHandler : MonoBehaviour
                 });
             }
         }
-        reset.OnClicked.AddListener(() =>
-        {
-            ResetPlayArea();
-        });
     }
 
     void ResetGenerator()
@@ -70,6 +71,20 @@ public class PlayAreaHandler : MonoBehaviour
     void Start()
     {
         ResetPlayArea();
+        reset.OnClicked.AddListener(() =>
+        {
+            ResetPlayArea();
+        });
+        useRotation.OnClicked.AddListener(() =>
+        {
+            objectGenerator.useRotation = useRotation.IsToggled;
+            ResetPlayArea();
+        });
+        useScale.OnClicked.AddListener(() =>
+        {
+            objectGenerator.useScale = useScale.IsToggled;
+            ResetPlayArea();
+        });
     }
 
     public void SetPlayArea(PlayAreaType playAreaType)

@@ -114,10 +114,9 @@ MonoBehaviour:
   targetTransform: {x: -1, y: 2, z: 2}
   targetRotation: {x: 0, y: 0, z: 0, w: 1}
   targetScale: {x: 0, y: 0, z: 0}
-  rotationTargetTolerance: 3
-  transformTargetTolerance: 0.015
+  rotationTargetTolerance: 5
+  transformTargetTolerance: 0.02
   scaleTargetTolerance: 0
-  arrowObjectPrefab: {fileID: 1133875537543874503, guid: 3cc4c9be5bb252b44a79eaf7d918a482, type: 3}
 --- !u!65 &1720522627331828065
 BoxCollider:
   m_ObjectHideFlags: 0

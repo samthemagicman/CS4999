@@ -7,8 +7,9 @@ using TMPro.EditorUtilities;
 public class ObjectGenerator : MonoBehaviour
 {
     private AudioSource audioSource;
-    public List<MoveToTargetTask> objectsToGenerate; // List of GameObjects to generate
+    public MoveToTargetTask objectsToGenerate; // List of GameObjects to generate
     public bool useRotation = false;
+    public bool useScale = false;
     [SerializeField]
     private Vector3 _spawnAreaPosition;
     public Vector3 SpawnAreaPosition
@@ -78,19 +79,13 @@ public class ObjectGenerator : MonoBehaviour
 
 
         // Instantiate a random object from the list at the calculated position
-        currentObject = Instantiate(objectsToGenerate[Random.Range(0, objectsToGenerate.Count)].gameObject, transform.position + randomPosition, Quaternion.identity);
+        currentObject = Instantiate(objectsToGenerate.gameObject, transform.position + randomPosition, Quaternion.identity);
         MoveToTargetTask targetTask = currentObject.GetComponent<MoveToTargetTask>();
         targetTask.targetTransform = randomTargetPosition;
-        if (useRotation)
-        {
-            targetTask.useRotation = true;
-            targetTask.targetRotation = randomRotation;
-        }
-        else
-        {
-            targetTask.useRotation = false;
-        }
-
+        targetTask.useScale = useScale;
+        targetTask.useRotation = useRotation;
+        targetTask.targetRotation = randomRotation;
+        targetTask.targetRotation = randomRotation;
         targetTask.OnCompleted.AddListener(() =>
         {
             CreateObject();
