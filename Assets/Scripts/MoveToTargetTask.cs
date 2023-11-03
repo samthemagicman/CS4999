@@ -45,8 +45,6 @@ public class MoveToTargetTask : MonoBehaviour
     public float scaleTargetTolerance;
 
     private GameObject targetGameObject;
-    public GameObject arrowObjectPrefab;
-    private GameObject arrowObject;
 
     private ObjectManipulator objectManipulator;
 
@@ -154,8 +152,6 @@ public class MoveToTargetTask : MonoBehaviour
         {
             setTargetGameObjectMaterial(targetMaterial);
         }
-
-        arrowObject = Instantiate(arrowObjectPrefab);
     }
 
     void setTargetGameObjectMaterial(Material material) {
@@ -172,11 +168,6 @@ public class MoveToTargetTask : MonoBehaviour
         if (targetGameObject)
         {
             Destroy(targetGameObject.gameObject);
-        }
-
-        if (arrowObject)
-        {
-            Destroy(arrowObject.gameObject);
         }
     }
 
@@ -207,23 +198,6 @@ public class MoveToTargetTask : MonoBehaviour
         return true;
     }
 
-    void AnimateArrow()
-    {
-        if (targetGameObject != null && arrowObject != null)
-        {
-            // Get the bounds of the target object in its local space
-            Bounds bounds = targetGameObject.GetComponent<Renderer>().bounds;
-
-            // Set the arrow's position to be on top of the target object using its bounds
-            Vector3 arrowPosition = new Vector3(targetGameObject.transform.position.x,
-                bounds.max.y + 0.03f, // Place the arrow on top (Y-axis) of the object's bounds
-                targetGameObject.transform.position.z);
-
-            // Apply the arrow's position considering the rotation of the target object
-            arrowObject.transform.position = arrowPosition;
-        }
-    }
-
     void Update()
     {
         if (beingDragged)
@@ -243,6 +217,5 @@ public class MoveToTargetTask : MonoBehaviour
         } else {
             setTargetGameObjectMaterial(targetMaterial);
         };
-        AnimateArrow();
     }
 }
