@@ -156,7 +156,6 @@ public class MoveToTargetTask : MonoBehaviour
             {
                 Debug.LogException(new Exception("Couldn't create preview object"));
             }
-
             targetGameObject.transform.localScale = targetScale;
             targetGameObject.transform.position = targetTransform;
             targetGameObject.transform.rotation = targetRotation;
@@ -214,7 +213,7 @@ public class MoveToTargetTask : MonoBehaviour
 
     void Update()
     {
-        if (targetGameObject && beingDragged)
+        if (targetGameObject)
         {
             if (!useRotation)
             {
