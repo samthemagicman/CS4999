@@ -10,11 +10,13 @@ using UnityEngine.Events;
 /// </summary>
 public class MoveToTargetTask : MonoBehaviour
 {
+    #region public variables
     public UnityEvent OnCompleted = new UnityEvent();
     [HideInInspector]
     public bool TaskIsComplete = false;
 
     [HideInInspector] public bool beingDragged = false;
+    public bool alwaysShowTarget = true;
 
     [Tooltip("Will reset the object to the original position if the user fails")]
     public bool resetPositionOnDragFailed = false;
@@ -43,11 +45,14 @@ public class MoveToTargetTask : MonoBehaviour
     /// </summary>
     public float transformTargetTolerance;
     public float scaleTargetTolerance;
-
+    #endregion
+    #region private variables
     private GameObject targetGameObject;
 
     private ObjectManipulator objectManipulator;
+    #endregion
 
+    #region getters/setters
     public bool isInTargetScale
     {
         get
@@ -85,9 +90,14 @@ public class MoveToTargetTask : MonoBehaviour
             return false;
         }
     }
+    #endregion
 
     void Start()
     {
+        if (alwaysShowTarget)
+        {
+            CreateDragPreview();
+        }
         originalPosition = transform.position;
         objectManipulator = GetComponent<ObjectManipulator>();
         if (objectManipulator)
@@ -116,41 +126,45 @@ public class MoveToTargetTask : MonoBehaviour
 
     void CreateDragPreview()
     {
-        // Create a new empty GameObject and copy the mesh
-        MeshFilter sourceMeshFilter = gameObject.GetComponent<MeshFilter>();
-        if (sourceMeshFilter != null && sourceMeshFilter.sharedMesh != null)
+        if (targetGameObject == null)
         {
-            MeshRenderer sourceMeshRenderer = gameObject.GetComponent<MeshRenderer>();
 
-            // Create a new empty GameObject
-            GameObject newObject = new GameObject("CopiedMeshObject");
-
-            // Copy MeshFilter component
-            MeshFilter newMeshFilter = newObject.AddComponent<MeshFilter>();
-            newMeshFilter.sharedMesh = Instantiate(sourceMeshFilter.sharedMesh); // Clone the mesh
-
-            // Copy MeshRenderer component
-            if (sourceMeshRenderer != null)
+            // Create a new empty GameObject and copy the mesh
+            MeshFilter sourceMeshFilter = gameObject.GetComponent<MeshFilter>();
+            if (sourceMeshFilter != null && sourceMeshFilter.sharedMesh != null)
             {
-                MeshRenderer newMeshRenderer = newObject.AddComponent<MeshRenderer>();
-                newMeshRenderer.sharedMaterials = sourceMeshRenderer.sharedMaterials;
+                MeshRenderer sourceMeshRenderer = gameObject.GetComponent<MeshRenderer>();
+
+                // Create a new empty GameObject
+                GameObject newObject = new GameObject("CopiedMeshObject");
+
+                // Copy MeshFilter component
+                MeshFilter newMeshFilter = newObject.AddComponent<MeshFilter>();
+                newMeshFilter.sharedMesh = Instantiate(sourceMeshFilter.sharedMesh); // Clone the mesh
+
+                // Copy MeshRenderer component
+                if (sourceMeshRenderer != null)
+                {
+                    MeshRenderer newMeshRenderer = newObject.AddComponent<MeshRenderer>();
+                    newMeshRenderer.sharedMaterials = sourceMeshRenderer.sharedMaterials;
+                }
+
+                // Set the new object as a child of the empty GameObject this script is attached to
+                targetGameObject = newObject;
+            }
+            else
+            {
+                Debug.LogException(new Exception("Couldn't create preview object"));
             }
 
-            // Set the new object as a child of the empty GameObject this script is attached to
-            targetGameObject = newObject;
-        }
-        else
-        {
-            Debug.LogException(new Exception("Couldn't create preview object"));
-        }
+            targetGameObject.transform.localScale = targetScale;
+            targetGameObject.transform.position = targetTransform;
+            targetGameObject.transform.rotation = targetRotation;
 
-        targetGameObject.transform.localScale = targetScale;
-        targetGameObject.transform.position = targetTransform;
-        targetGameObject.transform.rotation = targetRotation;
-
-        if (targetMaterial)
-        {
-            setTargetGameObjectMaterial(targetMaterial);
+            if (targetMaterial)
+            {
+                setTargetGameObjectMaterial(targetMaterial);
+            }
         }
     }
 
@@ -165,7 +179,7 @@ public class MoveToTargetTask : MonoBehaviour
 
     void DestroyDragPreview()
     {
-        if (targetGameObject)
+        if (!alwaysShowTarget && targetGameObject)
         {
             Destroy(targetGameObject.gameObject);
         }
@@ -200,7 +214,7 @@ public class MoveToTargetTask : MonoBehaviour
 
     void Update()
     {
-        if (beingDragged)
+        if (targetGameObject && beingDragged)
         {
             if (!useRotation)
             {
@@ -217,5 +231,13 @@ public class MoveToTargetTask : MonoBehaviour
         } else {
             setTargetGameObjectMaterial(targetMaterial);
         };
+    }
+
+    private void OnDestroy()
+    {
+        if (targetGameObject != null)
+        {
+            Destroy(targetGameObject);
+        }
     }
 }

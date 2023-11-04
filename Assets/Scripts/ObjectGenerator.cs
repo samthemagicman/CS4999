@@ -10,6 +10,11 @@ public class ObjectGenerator : MonoBehaviour
     public MoveToTargetTask objectsToGenerate; // List of GameObjects to generate
     public bool useRotation = false;
     public bool useScale = false;
+
+    public float transformTargetTolerance;
+    public float rotationTargetTolerance;
+    public float scaleTargetTolerance;
+
     [SerializeField]
     private Vector3 _spawnAreaPosition;
     public Vector3 SpawnAreaPosition
@@ -71,6 +76,8 @@ public class ObjectGenerator : MonoBehaviour
         );
         randomTargetPosition += SpawnAreaPosition;
 
+        Vector3 randomTargetScale = new Vector3(1, 1, 1) * Random.Range(1.5f, 0.5f);
+
         Quaternion randomRotation = Quaternion.Euler(
             Random.Range(0, 360),
             Random.Range(0, 360),
@@ -85,7 +92,10 @@ public class ObjectGenerator : MonoBehaviour
         targetTask.useScale = useScale;
         targetTask.useRotation = useRotation;
         targetTask.targetRotation = randomRotation;
-        targetTask.targetRotation = randomRotation;
+        targetTask.targetScale = randomTargetScale;
+        targetTask.rotationTargetTolerance = rotationTargetTolerance;
+        targetTask.scaleTargetTolerance = scaleTargetTolerance;
+        targetTask.transformTargetTolerance = transformTargetTolerance;
         targetTask.OnCompleted.AddListener(() =>
         {
             CreateObject();

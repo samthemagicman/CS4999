@@ -4,38 +4,48 @@ using UnityEngine;
 using MixedReality.Toolkit.SpatialManipulation;
 using MixedReality.Toolkit.UX;
 using System;
+using TMPro;
+using Unity.Burst.Intrinsics;
 
-public enum PlayAreaType
+
+[Serializable]
+public class PlayAreaDistanceConfig
 {
-    Short,
-    Medium,
-    Long
+    public String distanceName;
+    public Vector3 offset;
 }
 
 [Serializable]
-public class PlayAreaConfiguration
+public class PlayAreaAccurancyConfig
 {
-    public PlayAreaType playAreaType;
-    public Vector3 playAreaPosition;
-    public PressableButton button;
+    public String accuracyName;
+    public float    transformTargetTolerance;
+    public float rotationTargetTolerance;
+    public float scaleTargetTolerance;
 }
 
 public class PlayAreaHandler : MonoBehaviour
 {
 
     [SerializeField]
-    private List<PlayAreaConfiguration> playAreaConfigurations = new List<PlayAreaConfiguration>();
+    private List<PlayAreaDistanceConfig> playAreaConfigurations = new List<PlayAreaDistanceConfig>();
 
-    public PressableButton useRotation;
-    public PressableButton useScale;
+    [SerializeField]
+    private List<PlayAreaAccurancyConfig> playAreaAccuracyConfig = new List<PlayAreaAccurancyConfig>();
+    
+    public GameObject playArea;
+    public ObjectGenerator objectGenerator;
+
+    public PressableButton templateButton;
+    public GameObject parentForDistanceButtons;
+
+    public PressableButton useRotationButton;
+    public PressableButton useScaleButotn;
+    public PressableButton resetButton;
     public Slider accuracySlider;
 
-    public ObjectGenerator objectGenerator;
-    private Dictionary<PlayAreaType, Vector3> playAreaDictionary;
-    public GameObject playArea;
     private Orbital _orbital;
-    public PlayAreaType currentPlayAreaType;
-    public PressableButton reset;
+    private Vector3 currentPlayAreaOffset;
     private Orbital orbital
     {
         get { if (_orbital == null)
@@ -49,18 +59,36 @@ public class PlayAreaHandler : MonoBehaviour
     private void Awake()
     {
         // Initialize the dictionary from the serialized list
-        playAreaDictionary = new Dictionary<PlayAreaType, Vector3>();
         foreach (var config in playAreaConfigurations)
         {
-            playAreaDictionary[config.playAreaType] = config.playAreaPosition;
-            if (config.button != null)
+            GameObject btn = Instantiate(templateButton.gameObject);
+            btn.transform.SetParent(parentForDistanceButtons.transform);
+            btn.SetActive(true);
+            btn.GetComponentInChildren<TextMeshProUGUI>().SetText(config.distanceName);
+            btn.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+
+            btn.GetComponent<PressableButton>().OnClicked.AddListener(() =>
             {
-                config.button.OnClicked.AddListener(() =>
-                {
-                    SetPlayArea(config.playAreaType);
-                });
-            }
+                SetPlayArea(config.offset);
+            });
         }
+
+        accuracySlider.MaxValue = playAreaAccuracyConfig.Count - 1;
+        accuracySlider.SliderStepDivisions = playAreaAccuracyConfig.Count - 1;
+        accuracySlider.OnValueUpdated.AddListener((arg) =>
+        {
+            UpdateAccuranceSlider((int)arg.NewValue);
+        });
+    }
+
+    void UpdateAccuranceSlider(int index)
+    {
+        PlayAreaAccurancyConfig config = playAreaAccuracyConfig[index];
+        objectGenerator.scaleTargetTolerance = config.scaleTargetTolerance;
+        objectGenerator.transformTargetTolerance = config.transformTargetTolerance;
+        objectGenerator.rotationTargetTolerance = config.rotationTargetTolerance;
+
+        ResetGenerator();
     }
 
     void ResetGenerator()
@@ -70,32 +98,36 @@ public class PlayAreaHandler : MonoBehaviour
 
     void Start()
     {
+        accuracySlider.Value = 0;
+        UpdateAccuranceSlider((int)accuracySlider.Value);
+        templateButton.gameObject.SetActive(false);
+        currentPlayAreaOffset = playAreaConfigurations[0].offset;
         ResetPlayArea();
-        reset.OnClicked.AddListener(() =>
+        resetButton.OnClicked.AddListener(() =>
         {
             ResetPlayArea();
         });
-        useRotation.OnClicked.AddListener(() =>
+        useRotationButton.OnClicked.AddListener(() =>
         {
-            objectGenerator.useRotation = useRotation.IsToggled;
+            objectGenerator.useRotation = useRotationButton.IsToggled;
             ResetPlayArea();
         });
-        useScale.OnClicked.AddListener(() =>
+        useScaleButotn.OnClicked.AddListener(() =>
         {
-            objectGenerator.useScale = useScale.IsToggled;
+            objectGenerator.useScale = useScaleButotn.IsToggled;
             ResetPlayArea();
         });
     }
 
-    public void SetPlayArea(PlayAreaType playAreaType)
+    public void SetPlayArea(Vector3 offset)
     {
-        currentPlayAreaType = playAreaType;
+        currentPlayAreaOffset = offset;
         ResetPlayArea();
     }
 
     public void ResetPlayArea()
     {
-        orbital.WorldOffset = playAreaDictionary[currentPlayAreaType];
+        orbital.WorldOffset = currentPlayAreaOffset;
         orbital.enabled = true;
         Invoke(nameof(ResetGenerator), 0.7f); // required or the old move task position is kept
     }
