@@ -20,6 +20,7 @@ public class ObjectStick : MonoBehaviour
     private Vector3 joystickStartPos;
     private Vector3 joystickStartScale;
     private Vector3 originalInteractablePos;
+    private Vector3 originalInteractableScale;
     private Quaternion originalInteractableRot;
     private float originalScaleRatio;
     private bool beingDragged = false;
@@ -45,6 +46,7 @@ public class ObjectStick : MonoBehaviour
         originalInteractablePos = currentInteractable.transform.position;
         originalInteractableRot = currentInteractable.transform.rotation;
         originalScaleRatio = currentInteractable.transform.localScale.x / joystick.transform.localScale.x;
+        originalInteractableScale = currentInteractable.transform.localScale;
     }
 
     private void JoystickUnselected()
@@ -57,7 +59,8 @@ public class ObjectStick : MonoBehaviour
         float joystickDistanceFromOrigin = Vector3.Distance(joystick.transform.position, originalObjectPositionIdentifier.transform.position);
         currentInteractable.transform.position = originalInteractablePos + joystick.transform.localPosition * (joystickDistanceFromOrigin * ratio);
         currentInteractable.transform.rotation = joystick.transform.rotation;
-        currentInteractable.transform.localScale = joystick.transform.localScale * originalScaleRatio;
+        //currentInteractable.transform.localScale = joystick.transform.localScale * originalScaleRatio;
+        currentInteractable.transform.localScale = originalInteractableScale * (joystick.transform.localScale.x / joystickStartScale.x);
     }
 
     void UpdateJoystickNotSelected()
