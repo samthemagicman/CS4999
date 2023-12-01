@@ -1477,19 +1477,21 @@ MonoBehaviour:
     offset: {x: 0, y: -0.5, z: 0.8}
   - distanceName: Far
     offset: {x: 0, y: -0.5, z: 1.2}
+  - distanceName: Very Far
+    offset: {x: 0, y: -0.5, z: 3}
   playAreaAccuracyConfig:
   - accuracyName: Low
-    transformTargetTolerance: 0.02
+    transformTargetTolerance: 0.05
     rotationTargetTolerance: 8
-    scaleTargetTolerance: 0.02
+    scaleTargetTolerance: 0.05
   - accuracyName: Medium
     transformTargetTolerance: 0.01
     rotationTargetTolerance: 6
     scaleTargetTolerance: 0.01
   - accuracyName: High
-    transformTargetTolerance: 0.004
+    transformTargetTolerance: 0.005
     rotationTargetTolerance: 4
-    scaleTargetTolerance: 0.004
+    scaleTargetTolerance: 0.005
   playArea: {fileID: 868395411}
   objectGenerator: {fileID: 807519039}
   templateButton: {fileID: 716219204}
@@ -6614,7 +6616,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 222.15001, y: 0}
   m_SizeDelta: {x: 124.100006, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1255037010
@@ -8633,7 +8635,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 98.05, y: 0}
   m_SizeDelta: {x: 124.100006, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1748385483
@@ -10726,7 +10728,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 20, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2141241184
