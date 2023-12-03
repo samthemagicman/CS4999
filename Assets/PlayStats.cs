@@ -93,13 +93,17 @@ public class PlayStats : MonoBehaviour
     private float objectGrabbedTime = 0;
     private bool counting = false;
 
-    private readonly string timestamp = DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString();
+    private static string Timestamp;
     
     private readonly ListTaskCompletedData listTaskCompletedData = new ListTaskCompletedData();
     private TaskCompletedData currentTaskCompletedData;
 
     private void Start()
     {
+        if (Timestamp == null)
+        {
+            Timestamp = DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString()
+        }
         playAreaSequence.taskStarted.AddListener(OnTaskStarted);
         playAreaSequence.taskFinished.AddListener(OnTaskFinished);
     }
@@ -155,7 +159,7 @@ public class PlayStats : MonoBehaviour
         
         if (saveToFile)
         {
-            SaveJsonData(listTaskCompletedData, $"{filePrefix}-{timestamp}.json");
+            SaveJsonData(listTaskCompletedData, $"{filePrefix}-{Timestamp}.json");
         }
         Debug.Log($"Task ${playAreaSequence.NumberOfTasksCompleted} finished in {finishedTime} seconds");
     }
