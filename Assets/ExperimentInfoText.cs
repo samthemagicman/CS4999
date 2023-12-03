@@ -7,7 +7,7 @@ public class ExperimentInfoText : MonoBehaviour
     public TextMeshProUGUI taskCount;
     private void Update()
     {
-        taskCount.SetText($"Task: {playAreaSequence.NumberOfTasksCompleted} / 20" + "\n" +
+        taskCount.SetText($"Task: {playAreaSequence.NumberOfTasksCompleted} / 70" + "\n" +
                           $"Distance: {playAreaSequence.currentAreaConfig.name}" + "\n" +
                           $"Accuracy: {playAreaSequence.currentAccuracyConfig.name}" + "\n" +
                           $"Use Scale: {playAreaSequence.currentAccuracyConfig.config.useScale}" + "\n" +
