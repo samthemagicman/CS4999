@@ -46,8 +46,10 @@ public class TaskAccuracyConfiguration
 
 public class PlayAreaSequence : MonoBehaviour
 {
+    public string nextScene;
+    
     private TaskAccuracyConfiguration lowAccuracyConfig = new TaskAccuracyConfiguration("Low", new TaskConfiguration(true, false, false, 8, 0.02f, 0.02f));
-    private TaskAccuracyConfiguration highAccuracyConfig = new TaskAccuracyConfiguration("High", new TaskConfiguration(true, false, false, 4, 0.005f, 0.005f));
+    private TaskAccuracyConfiguration highAccuracyConfig = new TaskAccuracyConfiguration("High", new TaskConfiguration(true, false, false, 4, 0.008f, 0.008f));
     
     private TaskAreaConfiguration closeAreaConfig = new TaskAreaConfiguration("Close", new Vector3(0, -0.5f, 0.5f));
 
@@ -149,6 +151,15 @@ public class PlayAreaSequence : MonoBehaviour
                 currentAccuracyConfig.config.useRotation = true;
                 currentAccuracyConfig.config.useScale = true;
                 break;
+            case > 70:
+            {
+                if (nextScene != null)
+                {
+                    UnityEngine.SceneManagement.SceneManager.LoadScene(nextScene);
+                }
+
+                break;
+            }
         }
 
         objectGenerator.taskConfiguration = currentAccuracyConfig.config;
