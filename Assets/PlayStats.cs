@@ -102,7 +102,7 @@ public class PlayStats : MonoBehaviour
     {
         if (Timestamp == null)
         {
-            Timestamp = DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString()
+            Timestamp = DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString();
         }
         playAreaSequence.taskStarted.AddListener(OnTaskStarted);
         playAreaSequence.taskFinished.AddListener(OnTaskFinished);
