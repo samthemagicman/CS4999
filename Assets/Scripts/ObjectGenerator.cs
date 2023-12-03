@@ -1,7 +1,4 @@
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using TMPro.EditorUtilities;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(AudioSource))]
