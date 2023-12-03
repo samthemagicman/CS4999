@@ -14,7 +14,7 @@ public class ObjectStick : MonoBehaviour
     private Material originalObjectMaterial;
     
     public ObjectManipulator joystick;
-    [HideInInspector]
+    
     public ObjectManipulator currentInteractable;
 
     private Vector3 joystickStartPos;
@@ -82,7 +82,7 @@ public class ObjectStick : MonoBehaviour
             UpdateJoystickSelected();
         }
 
-        if (!joystick.isSelected)
+        if (!joystick.isSelected && currentInteractable)
         {
             UpdateJoystickNotSelected();
         }
