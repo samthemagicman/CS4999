@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 /// <summary>
 /// Provides functionality to move the attached object to a given position
@@ -11,9 +12,12 @@ using UnityEngine.Events;
 public class MoveToTargetTask : MonoBehaviour
 {
     #region public variables
-    public UnityEvent OnCompleted = new UnityEvent();
+    public UnityEvent onCompleted = new UnityEvent();
+    public UnityEvent onFailed = new UnityEvent();
+    public UnityEvent objectGrabbed = new UnityEvent();
+    public UnityEvent dragFailed = new UnityEvent();
     [HideInInspector]
-    public bool TaskIsComplete = false;
+    public bool taskIsComplete = false;
 
     [HideInInspector] public bool beingDragged = false;
     public bool alwaysShowTarget = true;
@@ -22,10 +26,8 @@ public class MoveToTargetTask : MonoBehaviour
     public bool resetPositionOnDragFailed = false;
 
     private Vector3 originalPosition;
-
-    public bool useTransform = true;
-    public bool useRotation = false;
-    public bool useScale = false;
+    
+    public TaskConfiguration configuration = new TaskConfiguration(true, false, false, 5, 0.1f, 0.1f);
 
     /// <summary>
     /// The material to use for the target visual
@@ -36,29 +38,20 @@ public class MoveToTargetTask : MonoBehaviour
     public Quaternion targetRotation;
     public Vector3 targetScale;
 
-    /// <summary>
-    /// The tolerance (in degrees) before the target rotation is accepted
-    /// </summary>
-    public float rotationTargetTolerance;
-    /// <summary>
-    /// The margin before the target position is accepted
-    /// </summary>
-    public float transformTargetTolerance;
-    public float scaleTargetTolerance;
     #endregion
     #region private variables
     private GameObject targetGameObject;
 
-    private ObjectManipulator objectManipulator;
+    public ObjectManipulator objectManipulator;
     #endregion
 
     #region getters/setters
-    public bool isInTargetScale
+    bool isInTargetScale
     {
         get
         {
             // Check if the position is within the margin of the targetTransform
-            if (Vector3.Distance(transform.localScale, targetScale) <= scaleTargetTolerance)
+            if (Vector3.Distance(transform.localScale, targetScale) <= configuration.scaleTolerance)
             {
                 return true;
             }
@@ -71,7 +64,7 @@ public class MoveToTargetTask : MonoBehaviour
         get
         {
             // Check if the position is within the margin of the targetTransform
-            if (Vector3.Distance(transform.position, targetTransform) <= transformTargetTolerance)
+            if (Vector3.Distance(transform.position, targetTransform) <= configuration.transformTolerance)
             {
                 return true;
             }
@@ -83,7 +76,7 @@ public class MoveToTargetTask : MonoBehaviour
         get
         {
             // Check if the rotation is within the tolerance of the targetRotation
-            if (Quaternion.Angle(transform.rotation, targetRotation) <= rotationTargetTolerance)
+            if (Quaternion.Angle(transform.rotation, targetRotation) <= configuration.rotationTolerance)
             {
                 return true;
             }
@@ -104,6 +97,7 @@ public class MoveToTargetTask : MonoBehaviour
         {
             objectManipulator.firstSelectEntered.AddListener(arg0 =>
             {
+                objectGrabbed.Invoke();
                 CreateDragPreview();
                 beingDragged = true;
             });
@@ -112,18 +106,24 @@ public class MoveToTargetTask : MonoBehaviour
                 beingDragged = false;
                 DestroyDragPreview();
                 if (CheckCompletion()) {
-                    OnCompleted.Invoke();
-                    TaskIsComplete = true;
+                    onCompleted.Invoke();
+                    taskIsComplete = true;
                 }
                 else // failed
                 {
+                    dragFailed.Invoke();
                     if (resetPositionOnDragFailed) transform.position = originalPosition;
-                    TaskIsComplete = false;
+                    taskIsComplete = false;
                 }
             });
         }
     }
 
+    public void Fail()
+    {
+        onFailed.Invoke();
+    }
+    
     void CreateDragPreview()
     {
         if (targetGameObject == null)
@@ -184,16 +184,16 @@ public class MoveToTargetTask : MonoBehaviour
         }
     }
 
-    bool CheckCompletion()
+    public bool CheckCompletion()
     {
-        if (useRotation)
+        if (configuration.useRotation)
         {
             if (!isInTargetRotation)
             {
                 return false;
             }
         }
-        if (useTransform)
+        if (configuration.useTransform)
         {
             if (!isInTargetTransform)
             {
@@ -201,7 +201,7 @@ public class MoveToTargetTask : MonoBehaviour
             }
         }
 
-        if (useScale)
+        if (configuration.useScale)
         {
             if (!isInTargetScale)
             {
@@ -215,11 +215,11 @@ public class MoveToTargetTask : MonoBehaviour
     {
         if (targetGameObject)
         {
-            if (!useRotation)
+            if (!configuration.useRotation)
             {
                 targetGameObject.transform.rotation = transform.rotation;
             }
-            if (!useScale)
+            if (!configuration.useScale)
             {
                 targetGameObject.transform.localScale = transform.localScale;
             }

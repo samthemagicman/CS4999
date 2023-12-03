@@ -1,0 +1,1 @@
+{"data":[{"timeFromFirstGrab":13.145707130432129,"taskNumber":1,"failed":true,"missed":[],"accuracyConfiguration":{"name":"Low","config":{"useTransform":true,"useRotation":false,"useScale":false,"rotationTolerance":8.0,"transformTolerance":0.019999999552965165,"scaleTolerance":0.019999999552965165}},"areaConfiguration":{"name":"Close","offset":{"x":0.0,"y":-0.5,"z":0.5}}}]}

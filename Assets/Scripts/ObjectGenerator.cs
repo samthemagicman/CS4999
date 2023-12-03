@@ -2,18 +2,18 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro.EditorUtilities;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(AudioSource))]
 public class ObjectGenerator : MonoBehaviour
 {
+    public UnityEvent<MoveToTargetTask> newObjectGenerated = new UnityEvent<MoveToTargetTask>();
     private AudioSource audioSource;
     public MoveToTargetTask objectsToGenerate; // List of GameObjects to generate
-    public bool useRotation = false;
-    public bool useScale = false;
 
-    public float transformTargetTolerance;
-    public float rotationTargetTolerance;
-    public float scaleTargetTolerance;
+    public TaskConfiguration taskConfiguration = new TaskConfiguration(true, false, false, 6, 0.1f, 0.1f);
+
+    public bool autogenerate = true;
 
     [SerializeField]
     private Vector3 _spawnAreaPosition;
@@ -45,7 +45,10 @@ public class ObjectGenerator : MonoBehaviour
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();
-        CreateObject();
+        if (autogenerate)
+        {
+            CreateObject();
+        }
     }
 
     private void OnDrawGizmos()
@@ -58,10 +61,7 @@ public class ObjectGenerator : MonoBehaviour
 
     private void CreateObject()
     {
-        if (currentObject)
-        {
-            Destroy(currentObject);
-        }
+        DestroyCurrentObject();
         // Calculate random position within the object's bounds
         Vector3 randomPosition = new Vector3(
             Random.Range(-GenerationBounds.x / 2, GenerationBounds.x / 2),
@@ -89,18 +89,37 @@ public class ObjectGenerator : MonoBehaviour
         currentObject = Instantiate(objectsToGenerate.gameObject, transform.position + randomPosition, Quaternion.identity);
         MoveToTargetTask targetTask = currentObject.GetComponent<MoveToTargetTask>();
         targetTask.targetTransform = randomTargetPosition;
-        targetTask.useScale = useScale;
-        targetTask.useRotation = useRotation;
         targetTask.targetRotation = randomRotation;
         targetTask.targetScale = randomTargetScale;
-        targetTask.rotationTargetTolerance = rotationTargetTolerance;
-        targetTask.scaleTargetTolerance = scaleTargetTolerance;
-        targetTask.transformTargetTolerance = transformTargetTolerance;
-        targetTask.OnCompleted.AddListener(() =>
+
+        targetTask.configuration = taskConfiguration;
+        
+        targetTask.onCompleted.AddListener(() =>
         {
-            CreateObject();
+            if (autogenerate)
+            {
+                Generate();
+            }
+            else
+            {
+                DestroyCurrentObject();
+            }
             audioSource.Play();
         });
+        
+        newObjectGenerated.Invoke(targetTask);
+    }
+    
+    public void DestroyCurrentObject() {
+        if (currentObject)
+        {
+            Destroy(currentObject);
+        }
+    }
+    
+    public void Generate()
+    {
+        CreateObject();
     }
 
     public void Reset()
