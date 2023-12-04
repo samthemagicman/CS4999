@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028331, g: 0.2257133, b: 0.3069217, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4499,7 +4499,7 @@ MonoBehaviour:
   trackedHandedness: 3
   trackedHandJoint: 1
   transformOverride: {fileID: 0}
-  additionalOffset: {x: 0, y: 0, z: 0}
+  additionalOffset: {x: -0.12, y: -0.12, z: 0.4}
   additionalRotation: {x: 0, y: 0, z: 0}
   updateSolvers: 1
 --- !u!4 &892889689
@@ -5184,7 +5184,7 @@ MonoBehaviour:
   trackedHandedness: 3
   trackedHandJoint: 1
   transformOverride: {fileID: 0}
-  additionalOffset: {x: 0, y: 0, z: 0}
+  additionalOffset: {x: 0.12, y: -0.12, z: 0.4}
   additionalRotation: {x: 0, y: 0, z: 0}
   updateSolvers: 1
 --- !u!4 &1086775741
@@ -9033,6 +9033,7 @@ GameObject:
   - component: {fileID: 2038635020}
   - component: {fileID: 2038635024}
   - component: {fileID: 2038635027}
+  - component: {fileID: 2038635028}
   m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
@@ -9123,8 +9124,8 @@ MonoBehaviour:
   trackedHandedness: 3
   trackedHandJoint: 0
   transformOverride: {fileID: 0}
-  additionalOffset: {x: 0, y: 0.2, z: 0.36}
-  additionalRotation: {x: -12.18, y: 0, z: 0}
+  additionalOffset: {x: 0, y: 0, z: 0}
+  additionalRotation: {x: 0, y: 0, z: 0}
   updateSolvers: 1
 --- !u!114 &2038635027
 MonoBehaviour:
@@ -9133,7 +9134,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2038635019}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 07606d041cd57684c85e7122ad8e3897, type: 3}
   m_Name: 
@@ -9165,6 +9166,30 @@ MonoBehaviour:
   angularClampMode: 2
   tetherAngleSteps: 6
   boundsScaler: 1
+--- !u!114 &2038635028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2038635019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a8e5e857dcf3a84cbd29548d8c79aa5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  updateLinkedTransform: 0
+  moveLerpTime: 0.05
+  rotateLerpTime: 0.05
+  scaleLerpTime: 0
+  maintainScaleOnInitialization: 1
+  smoothing: 1
+  lifetime: 0
+  orientationType: 5
+  localOffset: {x: 0, y: 0, z: 0}
+  worldOffset: {x: 0, y: -0.43, z: 0.52}
+  useAngleStepping: 1
+  tetherAngleSteps: 6
 --- !u!1 &2058630070
 GameObject:
   m_ObjectHideFlags: 0
