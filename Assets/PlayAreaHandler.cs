@@ -84,9 +84,9 @@ public class PlayAreaHandler : MonoBehaviour
     void UpdateAccuranceSlider(int index)
     {
         PlayAreaAccurancyConfig config = playAreaAccuracyConfig[index];
-        objectGenerator.scaleTargetTolerance = config.scaleTargetTolerance;
-        objectGenerator.transformTargetTolerance = config.transformTargetTolerance;
-        objectGenerator.rotationTargetTolerance = config.rotationTargetTolerance;
+        objectGenerator.taskConfiguration.scaleTolerance = config.scaleTargetTolerance;
+        objectGenerator.taskConfiguration.transformTolerance = config.transformTargetTolerance;
+        objectGenerator.taskConfiguration.rotationTolerance = config.rotationTargetTolerance;
 
         ResetGenerator();
     }
@@ -109,12 +109,12 @@ public class PlayAreaHandler : MonoBehaviour
         });
         useRotationButton.OnClicked.AddListener(() =>
         {
-            objectGenerator.useRotation = useRotationButton.IsToggled;
+            objectGenerator.taskConfiguration.useRotation = useRotationButton.IsToggled;
             ResetPlayArea();
         });
         useScaleButotn.OnClicked.AddListener(() =>
         {
-            objectGenerator.useScale = useScaleButotn.IsToggled;
+            objectGenerator.taskConfiguration.useScale = useScaleButotn.IsToggled;
             ResetPlayArea();
         });
     }
