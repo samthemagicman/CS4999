@@ -17,6 +17,8 @@ public class ObjectStick : MonoBehaviour
     
     public ObjectManipulator currentInteractable;
 
+    private SolverHandler currentSolverHandler;
+
     private Vector3 joystickStartPos;
     private Vector3 joystickStartScale;
     private Vector3 originalInteractablePos;
@@ -27,6 +29,7 @@ public class ObjectStick : MonoBehaviour
 
     private void Start()
     {
+        currentSolverHandler = GetComponent<SolverHandler>();
         joystickStartScale = joystick.transform.localScale;
         originalObjectMaterial = originalObjectPositionIdentifier.material;
         
@@ -35,6 +38,7 @@ public class ObjectStick : MonoBehaviour
         
         joystick.selectExited.AddListener(arg0 =>
         {
+            currentSolverHandler.enabled = true;
             //joystick.transform.localPosition = Vector3.zero;
             currentInteractable.interactionManager.SelectExit(arg0.interactorObject, currentInteractable);
         });
@@ -42,6 +46,8 @@ public class ObjectStick : MonoBehaviour
 
     private void JoystickSelected(SelectEnterEventArgs selectEnterEventArgs)
     {
+        currentSolverHandler.enabled = false;
+        
         joystickStartPos = joystick.transform.localPosition;
         originalInteractablePos = currentInteractable.transform.position;
         originalInteractableRot = currentInteractable.transform.rotation;
